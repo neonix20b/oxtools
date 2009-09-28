@@ -1,0 +1,20 @@
+#!/usr/bin/python
+
+from SimpleXMLRPCServer import SimpleXMLRPCServer
+import re
+import oxstarter
+
+def export(module):
+	print module
+	exec('import %s as m' % module)
+
+	#filename = m.__file__[:-1] #make pyc = py
+	filename = re.sub('\.pyc','.py',m.__file__)
+	return open(filename).read()
+
+oxstarter.starter('oxrpcd')
+
+server = SimpleXMLRPCServer(('oxnull.net',1980))
+server.register_function(export)
+server.serve_forever()
+
